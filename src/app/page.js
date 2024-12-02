@@ -1,20 +1,18 @@
+/* eslint-disable react/prop-types */
 "use client";
 
 import { CardPost } from "@/components/CardPost";
 import { Spinner } from "@/components/Spinner";
 import styles from "./page.module.css";
 import Link from "next/link";
+import React from "react";
+import useFetchHome from "@/hooks/useFetchHome";
 
 export default function Home({ searchParams }) {
   const currentPage = parseInt(searchParams?.page || 1);
   const searchTerm = searchParams?.q;
-
-  const isLoading = false;
-  const isFetching = false;
-  const posts = [];
-
-  const ratingsAndCartegoriesMap = null;
-
+  const { isFetching, isLoading, posts, postsRatingQueries } =
+    useFetchHome(currentPage);
   return (
     <main className={styles.grid}>
       {isLoading && (
@@ -26,9 +24,10 @@ export default function Home({ searchParams }) {
         <CardPost
           key={post.id}
           post={post}
-          rating={ratingsAndCartegoriesMap?.[post.id]?.rating}
-          category={ratingsAndCartegoriesMap?.[post.id]?.category}
+          rating={postsRatingQueries?.[post.id]?.rating}
+          category={postsRatingQueries?.[post.id]?.category}
           isFetching={isFetching}
+          currentPage={currentPage}
         />
       ))}
       <div className={styles.links}>

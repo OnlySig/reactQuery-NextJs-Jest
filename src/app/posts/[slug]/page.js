@@ -1,16 +1,14 @@
+/* eslint-disable react/prop-types */
 "use client";
-
 import { CardPost } from "@/components/CardPost";
 import { CommentList } from "@/components/CommentList";
 import styles from "./page.module.css";
+import React from "react";
+import useFetchPostPage from "@/hooks/useFetchPostPage";
 
 const PagePost = ({ params }) => {
   const { slug } = params;
-
-  const post = null;
-
-  const postRating = null;
-
+  const { post, postRating } = useFetchPostPage(slug);
   return (
     <div>
       {post && (

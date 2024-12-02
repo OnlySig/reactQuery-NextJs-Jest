@@ -2,6 +2,11 @@ import { Prompt } from "next/font/google";
 import { Aside } from "@/components/Aside";
 import "./globals.css";
 import { SearchForm } from "@/components/SearchForm";
+import React from "react";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Code Connect",
@@ -13,21 +18,25 @@ const prompt = Prompt({
   subsets: ["latin"],
   display: "swap",
 });
-
+// eslint-disable-next-line react/prop-types
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-br" className={prompt.className}>
-      <body>
-        <div className="app-container">
-          <div>
-            <Aside />
+      <ReactQueryProvider>
+        <body>
+          <div className="app-container">
+            <div>
+              <Aside />
+            </div>
+            <div className="main-content">
+              <SearchForm />
+              {children}
+            </div>
           </div>
-          <div className="main-content">
-            <SearchForm />
-            {children}
-          </div>
-        </div>
-      </body>
+          <ToastContainer autoClose={2000} />
+          <ReactQueryDevtools />
+        </body>
+      </ReactQueryProvider>
     </html>
   );
 }

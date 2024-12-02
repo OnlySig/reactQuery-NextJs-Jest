@@ -8,7 +8,7 @@ import { Textarea } from "../Textarea";
 import { SubmitButton } from "../SubmitButton";
 import { Comment } from "../Comment";
 
-import useReplayMutation from "@/hooks/useReplayMutation";
+import useReplyMutation from "@/hooks/useReplyMutation";
 
 export const ReplyModal = ({ comment, slug }) => {
   const modalRef = useRef(null);
@@ -17,13 +17,14 @@ export const ReplyModal = ({ comment, slug }) => {
     modalRef.current.openModal();
   };
 
-  const mutationReplayModal = useReplayMutation(comment.id, slug, modalRef);
+  const { mutate } = useReplyMutation(comment.id, slug, modalRef);
 
   const handleReplieSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const textAreaValue = formData.get("text");
-    mutationReplayModal.mutate({ comment, text: textAreaValue });
+    mutate({ comment, text: textAreaValue });
+    e.target[0].value = "";
   };
   return (
     <>

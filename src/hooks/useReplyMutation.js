@@ -2,14 +2,13 @@ import { http } from "@/http";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-const useReplayMutation = (commentId, slug, modalRef) => {
+const useReplyMutation = (commentId, slug, modalRef) => {
   const queryClient = useQueryClient();
   const notify = (text) => toast(text);
-
-  return useMutation({
+  const replyMutation = useMutation({
     mutationFn: async (commentData) => {
       const { data, status } = await http.post(
-        `api/comment/${commentId}/replies`,
+        `api/comment/${commentData.comment.postId}/replies`,
         JSON.stringify(commentData)
       );
       if (status === 400 || status === 500)
@@ -17,7 +16,7 @@ const useReplayMutation = (commentId, slug, modalRef) => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("post", commentId);
+      queryClient.invalidateQueries(["post", slug]);
       modalRef.current.closeModal();
       notify("Resposta enviada com sucesso!");
     },
@@ -29,6 +28,14 @@ const useReplayMutation = (commentId, slug, modalRef) => {
       );
     },
   });
+
+  return {
+    mutate: ({ comment, text }) => replyMutation.mutate({ comment, text }),
+    status: replyMutation.status,
+    error: replyMutation.error,
+    isError: replyMutation.isError,
+    isSuccess: replyMutation.isSuccess,
+  };
 };
 
-export default useReplayMutation;
+export default useReplyMutation;
